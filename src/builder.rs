@@ -126,8 +126,97 @@ impl Builder {
 
 #[cfg(test)]
 mod tests {
-   // use super::*;
+   use super::*;
 
+   #[test]
+   fn test_basic_addition() {
+       // Test case for: f(x) = x + 5
+       let mut builder = Builder::new();
+       let x = builder.init();
+       let five = builder.constant(5);
+       let result = builder.add(x, five);
 
+       // Fill nodes with x = 10
+       builder.fill_nodes(&[(x, 10)]);
 
+       assert_eq!(builder.get_value(&result), Some(15)); // x + 5 = 10 + 5 = 15
+   }
+
+   #[test]
+   fn test_basic_multiplication() {
+       // Test case for: f(x) = x * 5
+       let mut builder = Builder::new();
+       let x = builder.init();
+       let five = builder.constant(5);
+       let result = builder.mul(x, five);
+
+       // Fill nodes with x = 4
+       builder.fill_nodes(&[(x, 4)]);
+
+       assert_eq!(builder.get_value(&result), Some(20)); // x * 5 = 4 * 5 = 20
+   }
+
+   #[test]
+   fn test_equality_constraint() {
+       // Test case for checking equality constraint
+       let mut builder = Builder::new();
+       let x = builder.init();
+       let y = builder.init();
+
+       // Add an equality constraint: x == y
+       builder.assert_equal(x, y);
+
+       // Fill nodes: x = 7, y = 7
+       builder.fill_nodes(&[(x, 7), (y, 7)]);
+
+       assert!(builder.check_constraints()); // Constraints should hold
+
+       // Fill nodes: x = 7, y = 8
+       builder.fill_nodes(&[(x, 7), (y, 8)]);
+
+       assert!(!builder.check_constraints()); // Constraints should fail
+   }
+
+   #[test]
+   fn test_hint_function() {
+       // Test case for a hint operation: f(x, y) = x / y
+       let mut builder = Builder::new();
+       let x = builder.init();
+       let y = builder.init();
+
+       // Add a hint operation that divides x by y (integer division)
+       let hint_node = builder.hint(|values: &HashMap<usize, u32>| {
+           let x_val = values.get(&0)?;
+           let y_val = values.get(&1)?;
+           if *y_val == 0 {
+               None
+           } else {
+               Some(x_val / y_val)
+           }
+       });
+
+       // Fill nodes: x = 20, y = 5
+       builder.fill_nodes(&[(x, 20), (y, 5)]);
+
+       assert_eq!(builder.get_value(&hint_node), Some(4)); // 20 / 5 = 4
+   }
+
+   #[test]
+   fn test_complex_graph() {
+       // Test case for: f(x) = (x + 2) * (x + 3)
+       let mut builder = Builder::new();
+       let x = builder.init();
+       let two = builder.constant(2);
+       let three = builder.constant(3);
+
+       let x_plus_2 = builder.add(x, two);
+       let x_plus_3 = builder.add(x, three);
+       let result = builder.mul(x_plus_2, x_plus_3);
+
+       // Fill nodes: x = 4
+       builder.fill_nodes(&[(x, 4)]);
+
+       // Expected: (4 + 2) * (4 + 3) = 6 * 7 = 42
+       assert_eq!(builder.get_value(&result), Some(42));
+   }
 }
