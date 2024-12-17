@@ -123,3 +123,22 @@ impl Builder {
         self.add_node(Operation::Hint(Box::new(f)))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_1() {
+        // Example 1: f(x) = x^2 + x + 5
+        let mut builder = Builder::new();
+        let x = builder.init();
+        let x_squared = builder.mul(x, x);
+        let five = builder.constant(5);
+        let x_squared_plus_5 = builder.add(x_squared, five);
+        let result = builder.add(x_squared_plus_5, x);
+
+        builder.fill_nodes(&[(x, 3)]);
+        assert_eq!(builder.get_value(&result), Some(17)); // Should print 17 (3^2 + 3 + 5)
+    }
+}
