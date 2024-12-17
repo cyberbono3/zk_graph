@@ -122,6 +122,11 @@ impl Builder {
     {
         self.add_node(Operation::Hint(Box::new(f)))
     }
+
+    pub fn square_root(value: u32) -> u32 {
+        (value as f64).sqrt() as u32
+
+    }
 }
 
 #[cfg(test)]
