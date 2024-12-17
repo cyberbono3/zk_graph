@@ -1,6 +1,5 @@
 use crate::node::HintFn;
 
-
 #[derive(Clone)]
 pub enum Operation {
     Input,
@@ -9,7 +8,6 @@ pub enum Operation {
     Multiply(usize, usize),
     Hint(Box<dyn HintFn>),
 }
-
 
 impl std::fmt::Debug for Operation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -1,4 +1,3 @@
-
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Copy)]
@@ -7,8 +6,12 @@ pub struct Node {
 }
 
 impl Node {
-    fn new(id: usize) -> Self {
+    pub fn new(id: usize) -> Self {
         Node { id }
+    }
+
+    pub fn id(&self) -> usize {
+        self.id
     }
 }
 
@@ -16,6 +19,20 @@ impl Node {
 pub struct EqualityConstraint {
     left: usize,
     right: usize,
+}
+
+impl EqualityConstraint {
+    pub fn new(left: usize, right: usize) -> Self {
+        Self { left, right }
+    }
+
+    pub fn left(&self) -> usize {
+        self.left
+    }
+
+    pub fn right(&self) -> usize {
+        self.right
+    }
 }
 
 pub trait HintFn: Send {
@@ -41,5 +58,3 @@ impl Clone for Box<dyn HintFn> {
         self.box_clone()
     }
 }
-
-
