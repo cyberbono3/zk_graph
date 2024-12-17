@@ -3,4 +3,14 @@ name = "zk_graph"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "zk_graph"
+path = "src/lib.rs"    
+
 [dependencies]
+
+[[example]]
+name = "example1"
+
+[[example]]
+name = "example2"
